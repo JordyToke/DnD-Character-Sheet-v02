@@ -10,11 +10,11 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-const layout = () => {
+const Layout = () => {
   return (
     <>
     <header>
-      <p>header</p>
+      <Header />
     </header>
     <main>
       <p>main</p>
@@ -27,4 +27,4 @@ const layout = () => {
   )
 }
 
-export default layout;
+export default Layout;
