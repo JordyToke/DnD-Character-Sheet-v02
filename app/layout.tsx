@@ -1,6 +1,7 @@
 import React from 'react'
-import { Outlet } from 'react-router';
 import type { Route } from "./+types/layout";
+import { Outlet } from 'react-router';
+import { Footer, Header } from './components';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,9 +10,20 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-function layout() {
+const layout = () => {
   return (
-    <Outlet />
+    <>
+    <header>
+      <p>header</p>
+    </header>
+    <main>
+      <p>main</p>
+      <Outlet />
+    </main>
+    <footer>
+      <Footer />
+    </footer>
+    </>
   )
 }
 
