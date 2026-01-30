@@ -1,7 +1,7 @@
-import React from 'react'
+import React from "react";
 import type { Route } from "./+types/layout";
-import { Outlet } from 'react-router';
-import { Footer, Header } from './components';
+import { Outlet } from "react-router";
+import { Footer, Header } from "./components";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -13,18 +13,18 @@ export function meta({}: Route.MetaArgs) {
 const Layout = () => {
   return (
     <>
-    <header>
-      <Header />
-    </header>
-    <main>
-      <p>main</p>
-      <Outlet />
-    </main>
-    <footer>
-      <Footer />
-    </footer>
+      <header>
+        <Header />
+      </header>
+      <main>
+        <p>main</p>
+        <Outlet />
+      </main>
+      <footer>
+        <Footer />
+      </footer>
     </>
-  )
-}
+  );
+};
 
 export default Layout;
