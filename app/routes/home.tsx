@@ -10,7 +10,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 const navlist = [
-  {label: "character 1", path: "character"}
+  {label: "character", path: "character"}
 ]
 
 const Home = () => {
