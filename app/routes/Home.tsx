@@ -9,15 +9,10 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-const navlist = [
-  {label: "character", path: "character"}
-]
-
 const Home = () => {
   return (
     <>
       <h1>Home Route!</h1>
-      <Navbar navlist={navlist} />
     </>
   );
 };

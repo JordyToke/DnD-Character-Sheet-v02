@@ -17,7 +17,7 @@ type Dice =
   | "d20"
 
 // abilities
-type Abilities =
+type Ability =
   | "strength"
   | "dexterity"
   | "constitution"
@@ -26,7 +26,7 @@ type Abilities =
   | "charisma";
 
 // skills
-type Skills = 
+type Skill = 
   | "Acrobatics"
   | "Animal Handling"
   | "Arcana"

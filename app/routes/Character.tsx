@@ -1,12 +1,13 @@
 import React from "react";
 import type { Route } from "./+types/Character";
+import { character } from "../utilities/character.ts";
 
 // export async function loader({params}: Route.LoaderArgs) {
 //   let character = await getCharacter(params.charId);
 //   return { character };
 // }
 
-const Character = () => {
+const Character = ({ characterData }) => {
   return (
     <>
       <div>
