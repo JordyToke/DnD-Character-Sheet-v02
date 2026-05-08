@@ -1,114 +1,159 @@
 // DnD character class / description / interface
 
 interface IClass {
-  _class: string;
-  _level: number;
+  className: string;
+  classLevel: number;
+  archetype?: string;
 }
 
 // conversion for distance units
 
 // standar dice types
-type Dice = 
-  | "d4"
-  | "d6"
-  | "d8"
-  | "d10"
-  | "d12"
-  | "d20"
+type Dice = 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd20';
 
 // abilities
 type Abilities =
-  | "strength"
-  | "dexterity"
-  | "constitution"
-  | "intelligence"
-  | "wisdom"
-  | "charisma";
+  | 'strength'
+  | 'dexterity'
+  | 'constitution'
+  | 'intelligence'
+  | 'wisdom'
+  | 'charisma';
 
-// skills
-type Skills = 
-  | "Acrobatics"
-  | "Animal Handling"
-  | "Arcana"
-  | "Athletics"
-  | "Deception"
-  | "History"
-  | "Insight"
-  | "Intimidation"
-  | "Investigation"
-  | "Medicine"
-  | "Nature"
-  | "Perception"
-  | "Performance"
-  | "Persuasion"
-  | "Religion"
-  | "Sleight of Hand"
-  | "Stealth"
-  | "Survival"
+//  Skills
+type Skills =
+  | 'Acrobatics'
+  | 'Animal Handling'
+  | 'Arcana'
+  | 'Athletics'
+  | 'Deception'
+  | 'History'
+  | 'Insight'
+  | 'Intimidation'
+  | 'Investigation'
+  | 'Medicine'
+  | 'Nature'
+  | 'Perception'
+  | 'Performance'
+  | 'Persuasion'
+  | 'Religion'
+  | 'Sleight of Hand'
+  | 'Stealth'
+  | 'Survival';
 
-  interface IName {
-    _given: string;
-    _family?: string;
-    _nickname?: string;
+interface IName {
+  given: string;
+  family?: string;
+  nicknames?: string;
+}
+
+// all proficiencies listed as an array of strings (create a seperate array of strings for **expertise**)
+type TProficiencies = string[];
+
+// abilities as an interface
+interface IAbility {
+  score: number;
+  modifier: number;
+}
+
+class Ability implements IAbility {
+  score: number = 8;
+  modifier: number = Math.floor(this.score / 2) - 5;
+  constructor(abilityScore: number) {
+    this.score = abilityScore;
   }
+}
 
-  type TProficiencies = string[];
+interface IAbilities {
+  strength: IAbility;
+  dexterity: IAbility;
+  constitution: IAbility;
+  intelligence: IAbility;
+  wisdom: IAbility;
+  charisma: IAbility;
+}
 
-export class Character {
+interface IPlayer {
+  name: IName | string;
+  campaigns: number[];
+  characters: number[];
+}
+
+export class Player {
+  name: IName;
+  campaigns: number[] = [];
+  characters: number[] = [];
+}
+
+interface ICharacter {
+  id: number;
+  name: IName;
+  level: number;
+  xp?: number;
+  classes: IClass[];
+  background: string;
+  race: string;
+  alignment: string;
+  armourClass: number;
+  speed: number;
+  abilities: IAbilities;
+  proficiencyBonus: number;
+}
+
+export class Character implements ICharacter {
   // timestamp character id
-  _id: number = performance.now()
-  _name: IName = {
-    _given: ""
+  id: number = Date.now();
+  name: IName = {
+    given: '',
   };
-  _classes: IClass | IClass[] = { _class: "", _level: 1 };
-  _background: string = "";
-  _race: string = "";
-  _alignment: string = "";
-  _xp?: number = 0;
-  _armorClass: number = 0;
-  _initiative: number = 0;
-  _speed: number = 0;
+  level: number = 1;
+  classes: IClass[] = [{ className: '', classLevel: 1 }];
+  background: string = '';
+  race: string = '';
+  alignment: string = '';
+  xp?: number = 0;
+  armourClass: number = 0;
+  initiative: number = 0;
+  speed: number = 0;
   // ability scores and modifiers
-  _abilityScores = {
-    _strength: 8,
-    _dexterity: 8,
-    _constitution: 8,
-    _intelligence: 8,
-    _wisdom: 8,
-    _charisma: 8,
+  abilities = {
+    strength: new Ability(8),
+    dexterity: new Ability(8),
+    constitution: new Ability(8),
+    intelligence: new Ability(8),
+    wisdom: new Ability(8),
+    charisma: new Ability(8),
   };
-  // ability modifier calculations
-  _abilityMods = {
-    _strength: (this._abilityScores._strength / 2) - 5,
-    _dexterity: (this._abilityScores._dexterity / 2) - 5,
-    _constitution:(this._abilityScores._constitution / 2) - 5,
-    _intelligence: (this._abilityScores._intelligence / 2) - 5,
-    _wisdom: (this._abilityScores._wisdom / 2) - 5,
-    _charisma: (this._abilityScores._charisma / 2) - 5,
-  }
-  _inspiration?: string;
-  _proficiencyBonus: number = 2;
+  inspiration?: string;
+  proficiencyBonus: number = 1 + (this.level + 3) / 4;
   // proficiencies include abilities (saving throws), skills, armours, weapons, shields, etc. Remove Duplicates?
-  _proficiencies: TProficiencies = []
+  proficiencies: TProficiencies = [];
   // passive wisdom + perception proficiency
-  _perception = this._abilityMods._wisdom;
+  perception = this.abilities.wisdom.modifier;
   // calculation based on classes levels and their corresponding hit dice
-  _hitDice?: Dice | Dice[] ;
+  hitDice?: Dice | Dice[];
   // starting hit points
-  _health = {
-    _current: 0,
-    _temp: 0,
-    _max: 1,
-    _deathSaves: {
-      _success: 0,
-      _failure: 0,
-    }
+  health = {
+    current: 0,
+    temp: 0,
+    max: 1,
+    deathSaves: {
+      success: 0,
+      failure: 0,
+    },
   };
 
-  constructor(name: IName | string) {
-
-  }
-  get name() {
-    return this._name
+  constructor(id: number, name: IName | string) {
+    this.id = id;
+    if (typeof name === 'string') {
+      const names = name.split(' ');
+      this.name.given = names[0];
+      if (names.length > 1) {
+        this.name.family = names[names.length - 1];
+      }
+      if (names.length > 2) {
+        this.name.nicknames = names.slice(1, -1).join(' ');
+      }
+    }
   }
 }

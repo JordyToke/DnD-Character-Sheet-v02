@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+.tooltip {
+  @apply bg-gray-700;
+  position: fixed;
+}

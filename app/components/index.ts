@@ -1,5 +1,6 @@
 import Footer from "./Footer";
 import Header from "./Header";
-import Navbar from "./Navbar";
+import Navbar, { type NavList, type NavItem} from "./Navbar";
+import Dialog from "./Dialog";
 
-export { Footer, Header, Navbar };
+export { Footer, Header, Navbar, type NavList, Dialog };

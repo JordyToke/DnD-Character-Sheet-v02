@@ -1,26 +1,47 @@
-import React from "react";
-import { NavLink } from "react-router";
+import React from 'react';
+import { NavLink } from 'react-router';
+/**
+ * Nav Items are the individual components that make up a Navlist.
+ * @param id - Optional id or key used by react when mapping components.
+ * @param label - The displayed label for the Nav Item component.
+ * @param path - The url the Nav Item directs to.
+ */
+export type NavItem = {
+  id?: number;
+  label: string;
+  path: string;
+};
 
-// navbar should take a list of routes
+/**
+ * A NavList is an array of NavItems
+ */
+export type NavList = NavItem[];
+
 interface NavbarProps {
-  navlist: {
-    label: string;
-    path: string;
-  }[]
+  navList: NavList;
+  baseUrl?: string;
+  className?: string;
 }
 
-// horizontal or vertical
-const Navbar = ({ navlist }: NavbarProps) => {
+/**
+ * Navbar - Outputs a horizontal or vertical navigation bar.
+ * @param NavList - A list of navigation items.
+ * @param baseUrl - A base url path to prepend to all Nav Item paths.
+ */
+const Navbar = ({ navList, baseUrl, className }: NavbarProps) => {
 
-  const navlinks = navlist.map((link, index) => (
-        <ul key={index}>
-          <NavLink to={link.path}>{link.label}</NavLink>
-        </ul>
-      ))
+  // Maps navList to an array of JSX list elements
+  const navLinks = navList.map((navItem, index) => (
+    <li className='w-fit' key={navItem.id ?? index}>
+      <NavLink to={baseUrl ? baseUrl + navItem.path : navItem.path}>
+        {navItem.label}
+      </NavLink>
+    </li>
+  ));
 
   return (
     <nav>
-      {navlinks}
+      <ul className={className}>{navLinks}</ul>
     </nav>
   );
 };

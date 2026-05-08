@@ -1,7 +1,8 @@
-import React from "react";
-import type { Route } from "./+types/layout";
+import React, { useState } from "react";
+import type { Route } from "./+types/Layout";
 import { Outlet } from "react-router";
 import { Footer, Header } from "./components";
+// import useMousePosition from "./hooks/useMousePosition";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -11,18 +12,16 @@ export function meta({}: Route.MetaArgs) {
 }
 
 const Layout = () => {
+  // const mousePosition = useMousePosition();
+
   return (
     <>
-      <header>
         <Header />
-      </header>
       <main>
-        <p>main</p>
+        {/* <p>Mouse Position: x={mousePosition.x} y={mousePosition.y}</p> */}
         <Outlet />
       </main>
-      <footer>
         <Footer />
-      </footer>
     </>
   );
 };
