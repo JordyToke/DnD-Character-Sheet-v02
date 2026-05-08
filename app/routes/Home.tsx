@@ -90,7 +90,9 @@ const Home = () => {
     <>
       <h1>Home Route!</h1>
       <Navbar baseUrl='character/' navList={charList} />
-      <button className='bg-gray-800 px-1 rounded' type="button">New Character</button>
+      <button className='bg-gray-800 px-1 rounded' type='button'>
+        New Character
+      </button>
       <Dialog>
         <form id='newChar' onSubmit={handleSubmit}>
           <label htmlFor='newCharName'>Make Character</label>
