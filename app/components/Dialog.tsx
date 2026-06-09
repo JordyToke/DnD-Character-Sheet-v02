@@ -1,13 +1,15 @@
-import React, { type DialogHTMLAttributes, type PropsWithChildren, type Ref } from "react";
+import React, { useRef, useState, type DialogHTMLAttributes, type PropsWithChildren, type Ref } from "react";
+import styles from "./Dialog.module.css";
 
 interface DialogProps extends PropsWithChildren {
-  ref?: Ref<HTMLDialogElement>
+  ref?: Ref<HTMLDialogElement>;
+  className?: string;
 }
 
-const Dialog = ({ children, ref }: DialogProps) => {
+const Dialog = ({ className = '', children, ref }: DialogProps) => {
 
   return (
-    <dialog ref={ref}>
+    <dialog className={className + styles['dialog']} ref={ref}>
       {children}
     </dialog>
   );

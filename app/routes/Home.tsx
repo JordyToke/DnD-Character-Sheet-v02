@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, type RefObject } from 'react';
 import type { Route } from './+types/Home';
-import { Navbar, Dialog, type NavList } from '~/components';
+import { Navbar, Dialog, type NavList, NewCharacterForm } from '~/components';
 import { NavLink } from 'react-router';
 
 // Homepage head and meta
@@ -16,6 +16,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
   const [charList, setCharList] = useState<NavList>([]);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     // fetches character list from some server
@@ -86,25 +87,45 @@ const Home = () => {
     ]);
   };
 
+  const handleModal = () => {
+    const dialog = dialogRef.current;
+    if (dialog) {
+      if (!dialog.open) {
+        dialog.showModal();
+      } else {
+        dialog.close();
+      }
+    }
+  };
+
+  const handleDialog = () => {
+    const dialog = dialogRef.current;
+    if (dialog) {
+      if (!dialog.open) {
+        dialog.show();
+      } else {
+        dialog.close();
+      }
+    }
+  };
+
   return (
     <>
       <h1>Home Route!</h1>
       <Navbar baseUrl='character/' navList={charList} />
-      <button className='bg-gray-800 px-1 rounded' type='button'>
+      <button
+        className='bg-gray-800 px-1 rounded'
+        type='button'
+        onClick={handleDialog}>
         New Character
       </button>
-      <Dialog>
-        <form id='newChar' onSubmit={handleSubmit}>
-          <label htmlFor='newCharName'>Make Character</label>
-          <input
-            type='text'
-            minLength={3}
-            id='newCharName'
-            name='newCharName'
-            placeholder='New Character'
-            className='bg-white/20 px-2 border rounded-md'
-          />
-        </form>
+      <Dialog ref={dialogRef}>
+        <NewCharacterForm submitHandler={handleSubmit} />
+        <div className='w-full flex justify-end-safe'>
+          <button className='my-0.5 px-1 text-white/60 rounded cursor-pointer hover:text-white' type='button' onClick={handleDialog}>
+            close
+          </button>
+        </div>
       </Dialog>
     </>
   );
