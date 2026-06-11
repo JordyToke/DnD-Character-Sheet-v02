@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef, type RefObject } from 'react';
 import type { Route } from './+types/Home';
 import { Navbar, Dialog, type NavList, NewCharacterForm } from '~/components';
-import { NavLink } from 'react-router';
+import { PlayerCharacter } from '~/utilities';
+import useLocalStorage from '~/hooks/useLocalStorage';
 
 // Homepage head and meta
 export function meta({}: Route.MetaArgs) {
@@ -15,78 +16,47 @@ export function meta({}: Route.MetaArgs) {
 const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
-  const [charList, setCharList] = useState<NavList>([]);
+  /** A reference to new character creation dialog */
   const dialogRef = useRef<HTMLDialogElement>(null);
+  /** A list of characters names and Ids */
+  const [charList, setCharList] = useLocalStorage<NavList>('character-list', []);
 
-  useEffect(() => {
-    // fetches character list from some server
-    const fetchCharList = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch('/characterList.json');
-        if (!res.ok) {
-          throw new Error(`Response status: ${res.status}`);
-        }
-        const data: NavList = await res.json();
-        console.log(data);
-        setCharList((oldCharList) => [...oldCharList, ...data]);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // load character list from local storage
-    const localCharData: string | null = localStorage.getItem('charList');
-
-    if (localCharData) {
-      console.log(
-        `Character List from local storage contains: ${localCharData}...\n updating...`,
-      );
-      // parse character list from local storage
-      const localCharList = JSON.parse(localCharData) as NavList;
-      // update character list state with local storage characters
-      setCharList((oldCharList) => [...oldCharList, ...localCharList]);
-    } else {
-      fetchCharList();
-    }
-  }, []);
-
-  // update character list to local storage
-  useEffect(() => {
-    updateLocalStorage('charList', charList);
-  }, [charList]);
-
-  // update local storage to match react state
+  // update local storage
   const updateLocalStorage = (item: string, value: {}) => {
     localStorage.setItem(item, JSON.stringify(value));
   };
 
+  // submit should create a new character with the given name in local storage 'characters'
   const handleSubmit = (event: React.SubmitEvent) => {
     event.preventDefault();
     const form = event.currentTarget;
+    console.log(form);
     const formFields: Record<string, string> = {};
     form.querySelectorAll('input').forEach((element) => {
+      console.log(`${element.name}:${element.value}`);
       formFields[element.name] = element.value;
       element.value = '';
     });
 
-    // debugging log
-    console.log(`Form Fields: ${JSON.stringify(formFields)}`);
+    const newCharacterName = formFields?.newCharName ?? {
+      given: formFields?.newCharGivenName,
+      nicknames: formFields?.newCharNicknames,
+      family: formFields?.newCharFamilyName,
+    };
 
-    setCharList((oldCharList) => [
-      ...oldCharList,
-      {
-        id: Number(Date.now()),
-        path: formFields.newCharName,
-        label: formFields.newCharName,
-      },
-      // new NavItem(formFields.newCharName)
-    ]);
+    // create new character with given name from fields
+    const newCharacter = new PlayerCharacter(Date.now(), newCharacterName);
+
+    // Add new character to local storage
+    updateLocalStorage(`${newCharacter.id}`, newCharacter);
+
+    // add character to charList as NavItem
+    setCharList(prevCharList => [...prevCharList, {id: newCharacter.id, label: `${newCharacter.name.given} ${newCharacter.name.family ?? ''}`.trim()}])
+
+    return handleModal()
   };
 
+  /** Handles toggling the modal opening and closing */
   const handleModal = () => {
     const dialog = dialogRef.current;
     if (dialog) {
@@ -98,6 +68,7 @@ const Home = () => {
     }
   };
 
+  /** Deprecated option instead of modal */
   const handleDialog = () => {
     const dialog = dialogRef.current;
     if (dialog) {
@@ -116,13 +87,22 @@ const Home = () => {
       <button
         className='bg-gray-800 px-1 rounded'
         type='button'
-        onClick={handleDialog}>
+        onClick={handleModal}>
         New Character
       </button>
       <Dialog ref={dialogRef}>
-        <NewCharacterForm submitHandler={handleSubmit} />
-        <div className='w-full flex justify-end-safe'>
-          <button className='my-0.5 px-1 text-white/60 rounded cursor-pointer hover:text-white' type='button' onClick={handleDialog}>
+        <NewCharacterForm id='newChar' submitHandler={handleSubmit} />
+        <div className='w-full flex justify-between'>
+          <input
+            className='my-0.5 px-1 text-white/60 rounded cursor-pointer hover:text-white'
+            form='newChar'
+            type='submit'
+            value='submit'
+          />
+          <button
+            className='my-0.5 px-1 text-white/60 rounded cursor-pointer hover:text-white'
+            type='button'
+            onClick={handleModal}>
             close
           </button>
         </div>

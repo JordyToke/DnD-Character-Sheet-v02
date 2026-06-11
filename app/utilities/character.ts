@@ -8,7 +8,7 @@ interface IClass {
 
 // conversion for distance units
 
-// standar dice types
+// standard dice types
 type Dice = 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd20';
 
 // abilities
@@ -41,10 +41,10 @@ type Skills =
   | 'Stealth'
   | 'Survival';
 
-interface IName {
+export interface IName {
   given: string;
   family?: string;
-  nicknames?: string;
+  nicknames?: string[];
 }
 
 // all proficiencies listed as an array of strings (create a seperate array of strings for **expertise**)
@@ -100,7 +100,7 @@ interface ICharacter {
   proficiencyBonus: number;
 }
 
-export class Character implements ICharacter {
+export class PlayerCharacter implements ICharacter {
   // timestamp character id
   id: number = Date.now();
   name: IName = {
@@ -152,8 +152,12 @@ export class Character implements ICharacter {
         this.name.family = names[names.length - 1];
       }
       if (names.length > 2) {
-        this.name.nicknames = names.slice(1, -1).join(' ');
+        this.name.nicknames = names.slice(1, -1);
       }
+    } else {
+      this.name.given = name.given;
+      this.name.nicknames = name.nicknames;
+      this.name.family = name.family;
     }
   }
 }

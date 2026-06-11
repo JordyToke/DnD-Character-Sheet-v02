@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import type { Route } from './+types/CharacterSheet';
-import { Character } from '~/utilities/character';
+import { PlayerCharacter } from '~/utilities';
+import useLocalStorage from '~/hooks/useLocalStorage';
 
 // export async function loader({params}: Route.LoaderArgs) {
 //   let character = await fetchCharacter(params.charId);
 //   return { character };
 // }
 
-export const CharacterMap = () => {
-  const [character, setCharacter] = useState<Character | undefined | null>();
+interface CharacterSheetProps {
+  character: PlayerCharacter,
+  params?: Route.ComponentProps
+}
 
-  
-  return;
-};
-
-const CharacterSheet = ({ params }: Route.ComponentProps) => {
-  const [character, setCharacter] = useState();
+const CharacterSheet = ({ params, character }: CharacterSheetProps) => {
+  const [characters, setCharacter] = useLocalStorage('characters')
 
   return (
     <>

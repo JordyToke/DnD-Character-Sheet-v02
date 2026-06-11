@@ -9,10 +9,11 @@ import React, {
 } from 'react';
 
 interface NewCharacterFormProps {
+  id: string,
   submitHandler: (event: SubmitEvent) => void;
 }
 
-const NewCharacterForm = ({ submitHandler }: NewCharacterFormProps) => {
+const NewCharacterForm = ({ id, submitHandler }: NewCharacterFormProps) => {
   // Variable for storing form state
   const [form, setForm] = useState({});
   const [fullName, setFullName] = useState(false);
@@ -32,7 +33,7 @@ const NewCharacterForm = ({ submitHandler }: NewCharacterFormProps) => {
   return (
     <form
       className='grid grid-cols-2 justify-between gap-y-2'
-      id='newChar'
+      id={id}
       onSubmit={submitHandler}>
       <h1 className='text-xl text-green-300 col-span-2 justify-self-center-safe'>
         New Character
@@ -64,10 +65,10 @@ const NewCharacterForm = ({ submitHandler }: NewCharacterFormProps) => {
             className='bg-white/20 px-2 border rounded-md'
             placeholder='family name'
           />
-          <label htmlFor='newCharNickname'>Character Nicknames:</label>
+          <label htmlFor='newCharNicknames'>Character Nicknames:</label>
           <input
-            id='newCharNickname'
-            name='newCharNickname'
+            id='newCharNicknames'
+            name='newCharNicknames'
             type='text'
             onChange={changeHandler}
             className='bg-white/20 px-2 border rounded-md'

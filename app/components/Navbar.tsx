@@ -7,9 +7,9 @@ import { NavLink } from 'react-router';
  * @param path - The url the Nav Item directs to.
  */
 export type NavItem = {
-  id?: number;
+  id: number;
   label: string;
-  path: string;
+  path?: string;
 };
 
 /**
@@ -33,7 +33,7 @@ const Navbar = ({ navList, baseUrl, className }: NavbarProps) => {
   // Maps navList to an array of JSX list elements
   const navLinks = navList.map((navItem, index) => (
     <li className='w-fit' key={navItem.id ?? index}>
-      <NavLink to={baseUrl ? baseUrl + navItem.path : navItem.path}>
+      <NavLink to={baseUrl ? `${baseUrl}${navItem.id ?? navItem.path}` : `${navItem.path ?? navItem.id}`}>
         {navItem.label}
       </NavLink>
     </li>

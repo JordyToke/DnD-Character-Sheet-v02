@@ -1,4 +1,4 @@
-import { debounce } from './debounce';
 import throttle from './throttle';
+import { PlayerCharacter, type IName } from './character';
 
-export { debounce, throttle };
+export { throttle, PlayerCharacter, type IName };
