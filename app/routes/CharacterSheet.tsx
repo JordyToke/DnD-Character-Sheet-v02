@@ -5,6 +5,7 @@ import useLocalStorage from '~/hooks/useLocalStorage';
 import { useParams } from 'react-router';
 import useDebounce from '~/hooks/useDebounce';
 
+// character sheet dynamically renders players character form from local storage with the ability to update values. TODO: Change implementation to modify the PlayerCharacter class in local state with debounced updates to local storage!
 const CharacterSheet = () => {
   const params = useParams();
   const [character, setCharacter] = useLocalStorage<PlayerCharacter | {}>(
@@ -27,9 +28,10 @@ const CharacterSheet = () => {
         }
         current = current[keys[i]];
       }
-      
+
       // Convert to number if input type is number
-      const value = target.type === 'number' ? Number(target.value) : target.value;
+      const value =
+        target.type === 'number' ? Number(target.value) : target.value;
       current[keys[keys.length - 1]] = value;
 
       return updated;
@@ -57,17 +59,23 @@ const CharacterSheet = () => {
             return null;
           }
           return (
-            <fieldset className='pl-2 rounded border border-white/40 p-2' key={path}>
+            <fieldset
+              className='pl-2 rounded border border-white/40 p-2'
+              key={path}>
               <legend className='capitalize font-bold'>{property}</legend>
               {formatStats(value as object, path)}
             </fieldset>
           );
         case 'number':
           return (
-            <div className='grid grid-cols-2 gap-4 justify-between my-2' key={path}>
-              <label className='capitalize' htmlFor={path}>{property}</label>
+            <div
+              className='grid grid-cols-2 gap-4 justify-between my-2'
+              key={path}>
+              <label className='capitalize' htmlFor={path}>
+                {property}
+              </label>
               <input
-              className='bg-white/10 rounded'
+                className='bg-white/10 rounded'
                 id={path}
                 name={path}
                 type='number'
@@ -79,10 +87,14 @@ const CharacterSheet = () => {
         case 'string':
         default:
           return (
-            <div className='grid grid-cols-2 gap-4 justify-between my-2' key={path}>
-              <label className='capitalize' htmlFor={path}>{property}</label>
+            <div
+              className='grid grid-cols-2 gap-4 justify-between my-2'
+              key={path}>
+              <label className='capitalize' htmlFor={path}>
+                {property}
+              </label>
               <input
-              className='bg-white/10 rounded'
+                className='bg-white/10 rounded'
                 id={path}
                 name={path}
                 type='text'
@@ -109,7 +121,9 @@ const CharacterSheet = () => {
     return (
       <section id='charStats'>
         <h2>Character Stats</h2>
-        <form className='min-w-1/3 w-fit grid grid-cols-1 gap-4'>{formatStats(character)}</form>
+        <form className='min-w-1/3 w-fit grid grid-cols-1 gap-4'>
+          {formatStats(character)}
+        </form>
       </section>
     );
   };
