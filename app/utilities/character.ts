@@ -9,8 +9,37 @@ interface IClass {
 // conversion for distance units
 
 // standard dice types
-type Dice = 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd20';
+class Dice {
+  sides: number;
+  constructor (sides:number) {
+    this.sides=sides;
+  };
+  name = () => `D${this.sides}`;
+  roll = () => {
+    return Math.floor(Math.random()*this.sides)
+  }
+}
 
+// class/archetypes
+interface archetype {
+  name: string,
+  subType: Archetype,
+}
+
+// archetypes
+type Archetype =
+  | 'Fighter'
+  | 'Barbarian'
+  | 'Paladin'
+  | 'Artificer'
+  | 'Sorcerer'
+  | 'Warlock'
+  | 'Wizard'
+  | 'Cleric'
+  | 'Rogue'
+  | 'Ranger'
+  | 'Monk'
+  
 // abilities
 type Abilities =
   | 'strength'
